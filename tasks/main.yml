@@ -18,17 +18,13 @@
     version: "{{ singularity_version }}"
 
 - name: execute autogen.sh
-  command: /opt/singularity/autogen.sh
-    chdir: /opt/singularity
+  command: /opt/singularity/autogen.sh chdir=/opt/singularity
 
 - name: execute configure
-  command: /opt/singularity/configure --prefix=/usr/local
-    chdir: /opt/singularity
+  command: /opt/singularity/configure --prefix=/usr/local chdir=/opt/singularity
 
 - name: execute make
-  command: make
-    chdir: /opt/singularity
+  command: make chdir=/opt/singularity
 
 - name: execute make install
-  command: make install
-    chdir: /opt/singularity
+  command: make install chdir=/opt/singularity
