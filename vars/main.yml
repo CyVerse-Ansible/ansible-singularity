@@ -1,3 +1,2 @@
 ---
 # vars file for ansible-singularity
-singularity_version: "2.3"
