@@ -11,6 +11,16 @@
     - libtool
   when: ansible_distribution == "Ubuntu"
 
+- name: CentOS package installation
+  yum:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - autoconf
+    - libtool
+  when: ansible_distribution == "CentOS"
+
 - name: clone the singularity repo
   git:
     repo: 'https://github.com/singularityware/singularity.git'
