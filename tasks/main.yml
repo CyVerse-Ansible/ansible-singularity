@@ -9,6 +9,7 @@
     - autogen
     - autoconf
     - libtool
+    - libarchive-dev
   when: ansible_distribution == "Ubuntu"
 
 - name: CentOS package installation
