@@ -11,7 +11,7 @@ Linux build tools
 Role Variables
 --------------
 
-* singularity_version: the version of singularity to install, defaults to 2.3
+* singularity_version: the version of singularity to install, defaults to 2.5.1
 
 Dependencies
 ------------
