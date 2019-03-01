@@ -1,7 +1,6 @@
 ---
 - name: if singularity version is not defined, define the default
-  set_fact: "singularity_version={{singularity_default_version}}"
-  when: singularity_version is not defined or singularity_version == ""
+  set_fact: "{{ singularity_version | default(singularity_default_version) }}"
 
 - name: if singularity_version is pre-3.0
   include: singularity-pre-3.yml
