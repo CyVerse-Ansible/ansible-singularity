@@ -23,7 +23,7 @@
 
 - name: clone the singularity repo for pre-3.0
   git:
-    repo: 'https://github.com/singularityware/singularity.git'
+    repo: "https://github.com/singularityware/singularity.git"
     dest: /opt/singularity
     version: "{{ singularity_version }}"
 
