@@ -12,6 +12,7 @@ Role Variables
 --------------
 
 * singularity_version: the version of singularity to install, defaults to 2.5.1
+* singularity_go_path: the system path for go code/libs, defaults to /opt/go; singularity will be built here
 
 Dependencies
 ------------

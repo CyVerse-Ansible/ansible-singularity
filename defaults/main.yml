@@ -1,3 +1,4 @@
 ---
 # defaults file for ansible-singularity
 singularity_version: "2.6.1"
+singularity_go_path: "/opt/go"

@@ -1,42 +1,8 @@
 ---
-# tasks file for ansible-singularity
-- name: Ubuntu package installation
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items:
-    - autogen
-    - autoconf
-    - libtool
-    - libarchive-dev
-  when: ansible_distribution == "Ubuntu"
+- name: if singularity_version is pre-3.0
+  include: singularity-pre-3.yml
+  when: singularity_version is not defined or singularity_version == "" or singularity_version is version('3.0', operator='lt')
 
-- name: CentOS package installation
-  yum:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items:
-    - autoconf
-    - libtool
-    - libarchive-devel
-  when: ansible_distribution == "CentOS"
-
-- name: clone the singularity repo
-  git:
-    repo: 'https://github.com/singularityware/singularity.git'
-    dest: /opt/singularity
-    version: "{{ singularity_version }}"
-
-- name: execute autogen.sh
-  command: /opt/singularity/autogen.sh chdir=/opt/singularity
-
-- name: execute configure
-  command: /opt/singularity/configure --prefix=/usr/local chdir=/opt/singularity
-
-- name: execute make
-  command: make chdir=/opt/singularity
-
-- name: execute make install
-  command: make install chdir=/opt/singularity
+- name: if singularity_version is 3.0 or later
+  include: singularity-post-3.yml
+  when: singularity_version is defined and singularity_version != "" and singularity_version is version('3.0', operator='ge')
