@@ -41,22 +41,22 @@
   shell: go get -u -v github.com/golang/dep/cmd/dep chdir="{{singularity_build_dir}}/singularity"
   environment:
     GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:{{ansible_env.PATH}}"
+    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
 - name: execute mconfig for v3.0 or newer
   shell: ./mconfig chdir="{{singularity_build_dir}}/singularity"
   environment:
     GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:{{ansible_env.PATH}}"
+    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
 - name: execute make build for v3.0 or newer
   shell: make -C builddir chdir="{{singularity_build_dir}}/singularity"
   environment:
     GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:{{ansible_env.PATH}}"
+    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
 - name: execute make install for v3.0 or newer
   shell: make -C builddir install chdir="{{singularity_build_dir}}/singularity"
   environment:
     GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:{{ansible_env.PATH}}"
+    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
