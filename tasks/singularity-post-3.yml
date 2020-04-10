@@ -23,6 +23,11 @@
       - openssl-devel
       - libuuid-devel
       - squashfs-tools
+      - libseccomp-devel
+      - wget
+      - pkgconfig
+      - git
+      - cryptsetup
     state: latest
     update_cache: yes
   when: ansible_distribution == "CentOS"
@@ -49,9 +54,18 @@
 
 - name: execute mconfig for v3.0 or newer
   shell: ./mconfig chdir="/opt/singularity-{{singularity_version}}"
+  environment:
+    GOPATH: "{{singularity_go_path}}"
+    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
 - name: execute make build for v3.0 or newer
   shell: make -C builddir chdir="/opt/singularity-{{singularity_version}}"
+  environment:
+    GOPATH: "{{singularity_go_path}}"
+    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
 - name: execute make install for v3.0 or newer
   shell: make -C builddir install chdir="/opt/singularity-{{singularity_version}}"
+  environment:
+    GOPATH: "{{singularity_go_path}}"
+    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
