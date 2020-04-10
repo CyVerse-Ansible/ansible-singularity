@@ -27,41 +27,25 @@
     update_cache: yes
   when: ansible_distribution == "CentOS"
 
-- name: create variable that points to sylabs build directory
-  set_fact: singularity_build_dir="{{singularity_go_path}}/src/github.com/sylabs"
+- name: download the singularity release
+  get_url:
+    url: "https://github.com/sylabs/singularity/releases/download/v{{singularity_version}}/singularity-{{singularity_version}}.tar.gz"
+    dest: "/tmp/singularity-{{singularity_version}}.tar.gz"
+    mode: 0644
 
-- name: create the go path directory
-  file:
-    path: "{{singularity_build_dir}}"
-    state: directory
-    mode: 0755
+- name: untar the singularity archive
+  unarchive:
+    src: "/tmp/singularity-{{singularity_version}}.tar.gz" 
+    dest: "/opt/singularity-{{singularity_version}}"
+    #    extra_opts: [--strip-components=1]
+    #    remote_src: yes
 
-- name: clone the singularity repo for v3.0 or newer
-  git:
-    repo: "https://github.com/singularityware/singularity.git"
-    dest: "{{singularity_build_dir}}/singularity"
-    version: "v{{ singularity_version }}"
-
-- name: get dependencies for v3.0 or newer
-  shell: go get -u -v github.com/golang/dep/cmd/dep chdir="{{singularity_build_dir}}/singularity"
-  environment:
-    GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
 - name: execute mconfig for v3.0 or newer
-  shell: ./mconfig chdir="{{singularity_build_dir}}/singularity"
-  environment:
-    GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
+  shell: ./mconfig chdir="/opt/singularity-{{singularity_version}}"
 
 - name: execute make build for v3.0 or newer
-  shell: make -C builddir chdir="{{singularity_build_dir}}/singularity"
-  environment:
-    GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
+  shell: make -C builddir chdir="/opt/singularity-{{singularity_version}}"
 
 - name: execute make install for v3.0 or newer
-  shell: make -C builddir install chdir="{{singularity_build_dir}}/singularity"
-  environment:
-    GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
+  shell: make -C builddir install chdir="/opt/singularity-{{singularity_version}}"
