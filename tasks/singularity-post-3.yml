@@ -7,6 +7,11 @@
       - libssl-dev
       - uuid-dev
       - squashfs-tools
+      - libseccomp-dev
+      - wget
+      - pkg-config
+      - git
+      - cryptsetup
     state: latest
     update_cache: yes
   when: ansible_distribution == "Ubuntu"
