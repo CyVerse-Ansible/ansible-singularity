@@ -1,6 +1,6 @@
 ---
 # tasks file for ansible-singularity
-- name: Ubuntu package installation for v3.0 or newer
+- name: Debian family package installation for v3.0 or newer
   apt:
     name: 
       - build-essential
@@ -14,9 +14,9 @@
       - cryptsetup
     state: latest
     update_cache: yes
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_os_family == "Debian"
 
-- name: CentOS package installation for v3.0 or newer
+- name: RedHat family package installation for v3.0 or newer
   yum:
     name: 
       - "@Development Tools"
@@ -30,7 +30,7 @@
       - cryptsetup
     state: latest
     update_cache: yes
-  when: ansible_distribution == "CentOS"
+  when: ansible_os_family == "RedHat"
 
 - name: download the singularity release
   get_url:
