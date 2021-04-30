@@ -7,7 +7,7 @@
       - autoconf
       - libtool
       - libarchive-dev
-    state: latest
+    state: present
     update_cache: yes
   when: ansible_os_family == "Debian"
 
@@ -17,7 +17,7 @@
       - autoconf
       - libtool
       - libarchive-devel
-    state: latest
+    state: present
     update_cache: yes
   when: ansible_os_family == "RedHat"
 
