@@ -8,6 +8,14 @@
   register: singularity_version_check
   # 127 means command not found. Stdout will be empty.
   failed_when: 'singularity_version_check.rc != 0 and singularity_version_check != 127'
+  when: singularity_version is version('3.0', operator='ge')
+
+- name: Check singularity version
+  command: singularity --version
+  register: singularity_version_check
+  # 127 means command not found. Stdout will be empty.
+  failed_when: 'singularity_version_check.rc != 0 and singularity_version_check != 127'
+  when: singularity_version is version('3.0', operator='lt')
 
 - name: Check if correct version is installed
   set_fact:
