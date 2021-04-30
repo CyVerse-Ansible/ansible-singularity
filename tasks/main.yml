@@ -3,10 +3,25 @@
   set_fact:
     singularity_version: "{{ singularity_version | default(singularity_default_version) }}"
 
+- name: Check singularity version
+  command: singularity version
+  register: singularity_version_check
+  # 127 means command not found. Stdout will be empty.
+  failed_when: 'singularity_version_check.rc != 0 and singularity_version_check != 127'
+
+- name: Check if correct version is installed
+  set_fact:
+    singularity_installed: "{{ singularity_version_check.stdout | trim }} == singularity_version"
+
+- name: Show singularity_installed
+  debug:
+    var:  singularity_installed
+    verbosity: 1
+
 - name: if singularity_version is pre-3.0
   include: singularity-pre-3.yml
-  when: singularity_version is version('3.0', operator='lt')
+  when: singularity_version is version('3.0', operator='lt') and not singularity_installed
 
 - name: if singularity_version is 3.0 or later
   include: singularity-post-3.yml
-  when: singularity_version is version('3.0', operator='ge')
+  when: singularity_version is version('3.0', operator='ge') and not singularity_installed
