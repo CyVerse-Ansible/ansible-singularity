@@ -2,7 +2,7 @@
 # tasks file for ansible-singularity
 - name: Ubuntu package installation for v3.0 or newer
   apt:
-    name: 
+    name:
       - build-essential
       - libssl-dev
       - uuid-dev
@@ -18,7 +18,7 @@
 
 - name: CentOS package installation for v3.0 or newer
   yum:
-    name: 
+    name:
       - "@Development Tools"
       - openssl-devel
       - libuuid-devel
@@ -32,40 +32,53 @@
     update_cache: yes
   when: ansible_distribution == "CentOS"
 
+- name: check if singularity binary exists
+  stat:
+    path: /usr/local/bin/singularity
+  register: binary
+
+- name: Obtain current binary version
+  command: singularity --version
+  register: current_version
+  when: binary.stat.exists
+
 - name: download the singularity release
   get_url:
     url: "https://github.com/sylabs/singularity/releases/download/v{{singularity_version}}/singularity-{{singularity_version}}.tar.gz"
     dest: "/tmp/singularity-{{singularity_version}}.tar.gz"
     mode: 0644
 
-- name: create the "/opt/singularity-{{singularity_version}}" directory
-  file:
-    path: "/opt/singularity-{{singularity_version}}"
-    state: directory
-    mode: 0755
+- name: Build Singularity
+  block:
 
-- name: untar the singularity archive
-  unarchive:
-    src: "/tmp/singularity-{{singularity_version}}.tar.gz" 
-    dest: "/opt/singularity-{{singularity_version}}"
-    extra_opts: [--strip-components=1]
-    remote_src: yes
+    - name: create the "/opt/singularity-{{singularity_version}}" directory
+      file:
+        path: "/opt/singularity-{{singularity_version}}"
+        state: directory
+        mode: 0755
 
+    - name: untar the singularity archive
+      unarchive:
+        src: "/tmp/singularity-{{singularity_version}}.tar.gz"
+        dest: "/opt/singularity-{{singularity_version}}"
+        extra_opts: [--strip-components=1]
+        remote_src: yes
 
-- name: execute mconfig for v3.0 or newer
-  shell: ./mconfig chdir="/opt/singularity-{{singularity_version}}"
-  environment:
-    GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
+    - name: execute mconfig for v3.0 or newer
+      shell: ./mconfig chdir="/opt/singularity-{{singularity_version}}"
+      environment:
+        GOPATH: "{{singularity_go_path}}"
+        PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
-- name: execute make build for v3.0 or newer
-  shell: make -C builddir chdir="/opt/singularity-{{singularity_version}}"
-  environment:
-    GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
+    - name: execute make build for v3.0 or newer
+      shell: make -C builddir chdir="/opt/singularity-{{singularity_version}}"
+      environment:
+        GOPATH: "{{singularity_go_path}}"
+        PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
 
-- name: execute make install for v3.0 or newer
-  shell: make -C builddir install chdir="/opt/singularity-{{singularity_version}}"
-  environment:
-    GOPATH: "{{singularity_go_path}}"
-    PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
+    - name: execute make install for v3.0 or newer
+      shell: make -C builddir install chdir="/opt/singularity-{{singularity_version}}"
+      environment:
+        GOPATH: "{{singularity_go_path}}"
+        PATH: "{{singularity_go_path}}/bin:/usr/local/bin:{{ansible_env.PATH}}"
+  when: not binary.stat.exists or current_version.stdout != "singularity version " + singularity_version
