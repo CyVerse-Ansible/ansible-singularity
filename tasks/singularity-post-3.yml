@@ -6,6 +6,7 @@
       - build-essential
       - libssl-dev
       - uuid-dev
+      - libgpgme-dev
       - squashfs-tools
       - libseccomp-dev
       - wget
