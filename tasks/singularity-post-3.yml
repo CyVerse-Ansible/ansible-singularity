@@ -35,7 +35,7 @@
 
 - name: download the singularity release
   get_url:
-    url: "https://github.com/sylabs/singularity/releases/download/v{{singularity_version}}/singularity-{{singularity_version}}.tar.gz"
+    url: "https://github.com/sylabs/singularity/releases/download/v{{singularity_version}}/singularity-ce-{{singularity_version}}.tar.gz"
     dest: "/tmp/singularity-{{singularity_version}}.tar.gz"
     mode: 0644
 
