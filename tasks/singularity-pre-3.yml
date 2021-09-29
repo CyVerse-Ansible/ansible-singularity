@@ -1,25 +1,25 @@
 ---
 # tasks file for ansible-singularity
-- name: Ubuntu package installation for pre-3.0
+- name: Debian family package installation for pre-3.0
   apt:
     name:
       - autogen
       - autoconf
       - libtool
       - libarchive-dev
-    state: latest
+    state: present
     update_cache: yes
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_os_family == "Debian"
 
-- name: CentOS package installation for pre-3.0
+- name: RedHat family package installation for pre-3.0
   yum:
     name:
       - autoconf
       - libtool
       - libarchive-devel
-    state: latest
+    state: present
     update_cache: yes
-  when: ansible_distribution == "CentOS"
+  when: ansible_os_family == "RedHat"
 
 - name: clone the singularity repo for pre-3.0
   git:
